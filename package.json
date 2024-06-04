@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "pdf-lib": "^1.17.1",
     "pdf2pic": "^3.1.1",
     "tesseract.js": "^5.1.0"
   }

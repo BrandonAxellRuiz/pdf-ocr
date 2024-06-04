@@ -1,18 +1,18 @@
+const fs = require("fs");
+const { PDFDocument } = require("pdf-lib");
+
 const gm = require("gm").subClass({ imageMagick: true });
 
-const getNumberOfPages = async (pdfPath) => {
-  return new Promise((resolve, reject) => {
-    gm(pdfPath).identify("%p", (err, value) => {
-      if (err) {
-        reject(err);
-      } else {
-        // Value is a string containing the pages, parse it to get the last one which is the number of pages
-        const pages = value.split(",").map(Number);
-        resolve(Math.max(...pages));
-      }
-    });
-  });
-};
+async function countPages(pdfPath) {
+  try {
+    const pdfBuffer = fs.readFileSync(pdfPath);
+    const pdfDoc = await PDFDocument.load(pdfBuffer);
+    const numPages = pdfDoc.getPageCount();
+    return numPages;
+  } catch (error) {
+    console.error("Error al leer el archivo PDF:", error);
+  }
+}
 
 /**
  * The function `convertPdfToImages` asynchronously converts each page of a PDF file to PNG images with
@@ -24,9 +24,9 @@ const getNumberOfPages = async (pdfPath) => {
  * of the converted images.
  */
 const convertPdfToImages = async (pdfPath, fileName) => {
-  let results = [];
   // Determine the number of pages or assume a fixed number; you might need another way to get this.
-  const numberOfPages = await getNumberOfPages(pdfPath); // Example: You would need to dynamically determine this based on the PDF.
+  const numberOfPages = await countPages(pdfPath); // Example: You would need to dynamically determine this based on the PDF.
+  let results = [];
 
   for (let i = 0; i < numberOfPages; i++) {
     const outputPath = `images/${fileName}-${i + 1}.png`;

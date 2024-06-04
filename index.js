@@ -5,17 +5,18 @@ const dataSaveOnTextFile = require("./utils/dataSaveOnTextFile");
 
 /**
  * The `processPdf` function processes a PDF file by converting it to images, performing OCR on the
- * images, saving the OCR results to a text file, and logging the results.
+ * images, and saving the OCR results to a text file.
  * @param pdfPath - The `pdfPath` parameter is the file path to the PDF document that you want to
- * process in the `processPdf` function.
+ * process.
  */
 const processPdf = async (pdfPath) => {
-  const imagePaths = await convertPdfToImages(pdfPath);
+  const fileName = path.basename(pdfPath, path.extname(pdfPath));
+  const imagePaths = await convertPdfToImages(pdfPath, fileName);
   const data = await performOcrOnImages(imagePaths);
-  await dataSaveOnTextFile(data, "t12");
+  await dataSaveOnTextFile(data, fileName);
 
   console.log("OCR Results:", data);
 };
 
 // Change this line for the PDF file path you want to process.
-processPdf(path.join(__dirname, "mypdf.pdf"));
+processPdf(path.join(__dirname, "SKM_C360i24042616180.pdf"));

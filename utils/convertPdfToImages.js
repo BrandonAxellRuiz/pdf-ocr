@@ -35,6 +35,9 @@ const convertPdfToImages = async (pdfPath, fileName) => {
     const result = await new Promise((resolve, reject) => {
       gm(`${pdfPath}[${i}]`)
         .density(300, 300) // Set density (DPI) for better image quality
+        .quality(100) // Set quality to 100%
+        .background("white") // Set background color to white
+        .flatten() // Flatten the image
         .write(outputPath, (error) => {
           if (error) {
             reject(error);
